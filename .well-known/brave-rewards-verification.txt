@@ -1,4 +1,0 @@
-This is a Brave Rewards publisher verification file.
-
-Domain: puthusseri.github.io
-Token: 787e5230028fb111642ac5be45656a77df89c57ed9fbf5a0fe2396470bf8834e

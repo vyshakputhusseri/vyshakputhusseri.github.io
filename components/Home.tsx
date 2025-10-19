@@ -24,13 +24,10 @@ const Home: React.FC<HomeProps> = ({ setActiveView }) => {
           <span className="bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 text-sm font-semibold px-3 py-1 rounded-full">
             Blue Team Defender
           </span>
-          <span className="bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300 text-sm font-semibold px-3 py-1 rounded-full">
-            Red Team Operator
-          </span>
         </div>
 
         <p className="max-w-3xl text-lg text-slate-500 dark:text-slate-400 mb-8">
-          I safeguard digital fortresses. As a member of Zoho's Blue Team, I engineer robust defenses to protect our products. In Red Team engagements, I adopt an adversarial mindset to uncover vulnerabilities before they can be exploited. My passion lies in the art of digital defense and offense, ensuring a secure and trustworthy user experience.
+          Just an average human, wandering through uncertainty in silence. I listen more than I speak, but in every quiet moment, I find something worth understanding.
         </p>
         <a
           href="#contact"
