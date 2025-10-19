@@ -1,64 +1,54 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vyshak Puthusseri's Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {},
+        },
+      }
+    </script>
+    <style>
+      /* Simple scrollbar styling for a more modern look */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f5f9; /* slate-100 */
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #38bdf8; /* sky-400 */
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #0ea5e9; /* sky-500 */
+      }
 
-<head>
-    <title>
-        Vyshak Puthusseri
-    </title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-
+      html.dark ::-webkit-scrollbar-track {
+        background: #1e293b; /* slate-800 */
+      }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "vite": "https://aistudiocdn.com/vite@^7.1.10",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.0.4"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
 </head>
-
-<body>
-    <div id="outterDIV">
-        <div>
-            <center>
-
-                <img src="./images/profile.jpg" id="myphoto" alt="puthusseri's Image">
-                <br><br><br>
-                <span id="myname">
-                VYSHAK PUTHUSSERI
-            </span>
-                <br>
-                <div id="mytitle"><span id="research">Research</span> - <span id="develop">Develop</span> - <span id="debug">Debug</span></div>
-                <br>
-                <div id="mydescription">
-                    <!-- this should contain some description about my dream -->
-                    A human, who loves being a student of technology for life.
-                    <br> For the past 4 years, I use linux, as it always gives the
-                    <br> privilage as a user. Interested to learn anything in and about technology, because I grew up
-                    <br> unaware of these changes around me.
-                    <br>Really enjoy fixing bugs.
-                </div>
-                <div id="contactingMediums">
-                    <a href="https://www.linkedin.com/in/vyshakputhusseri/">
-                        <i class="fa fa-linkedin-square"> </i>
-                    </a>
-                    <a href="https://github.com/puthusseri">
-                        <i class="fa fa-github-square"></i>
-                    </a>
-                    <a class="contact" href="mailto:vyshakputhusseri@gmail.com">
-                        <i class="fa fa-envelope"></i>
-                    </a>
-                    <a class="contact" href="https://wa.me/+917560817388">
-                        <i class="fa fa-whatsapp"></i>
-                    </a>
-                </div>
-                <div class="actions">
-                    <a class="action" id="cv" href="https://github.com/puthusseri/CV/raw/master/VyshakPuthusseri_CV.pdfhttps://github.com/puthusseri/CV/raw/master/VyshakPuthusseri_CV.pdf">Review My CV</a>
-                    <a class="action" id="coffee" href="https://puthusseri.github.io/additionalPage/">Something More About Me</a>
-
-                </div>
-                <script data-name="BMC-Widget" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="puthusseri" data-description="Support me on Buy me a coffee!" data-message="" data-color="#5F7FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
-            </center>
-
-        </div>
-    </div>
-
-</body>
-
-</html>
-
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
 </html>
