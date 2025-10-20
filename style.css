@@ -1,0 +1,101 @@
+body {
+    background-image: url("./images/bg.jpg");
+    /* to make the image fit in the page */
+    height: 100%;
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: whitesmoke;
+}
+
+a {
+    text-decoration-color: transparent;
+}
+
+#myphoto {
+    /* position: absolute; */
+    /* padding-top: 100px; */
+    width: 15%;
+    top: 0.5em;
+    bottom: 0.5em;
+    left: 0.5em;
+    right: 0;
+    background-position: center;
+    background-size: cover;
+    border-radius: 50%;
+    border: 5px solid #fff;
+    /* border-color: red; */
+}
+
+#outterDIV {
+    /* border: 1px solid black; */
+    margin: 100px;
+}
+
+#contactingMediums {
+    margin: 2.2rem auto;
+    text-align: center;
+    font-size: 1.2rem;
+    padding: 0;
+    /* text-decoration-color: transparent; */
+    text-decoration-line: underline;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 8px;
+    text-decoration-color: rgba(255, 255, 255, 0.2);
+    text-shadow: rgba(0, 0, 0, 0.25) 0.1rem 0.1rem 0.15rem;
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+.fa {
+    margin: 1%;
+    text-decoration-color: transparent;
+    color: whitesmoke;
+}
+
+#myname {
+    font-family: 'Roboto', sans-serif;
+    font-size: 25px;
+    font-display: bold;
+}
+
+#research {
+    color: black;
+}
+
+#debug {
+    color: black;
+}
+
+#mydescription {
+    font-size: 0.9rem;
+    font-stretch: narrower;
+    line-height: 25px;
+}
+
+#cv {
+    padding-right: 10%;
+}
+
+#coffee {
+    padding-left: 10%;
+}
+
+.actions {
+    text-decoration-line: underline;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 8px;
+    text-decoration-color: rgba(255, 255, 255, 0.2);
+    text-shadow: rgba(0, 0, 0, 0.25) 0.1rem 0.1rem 0.15rem;
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+.action:hover {
+    text-decoration-color: whitesmoke;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 8px;
+}
+
+.action {
+    color: whitesmoke;
+}
