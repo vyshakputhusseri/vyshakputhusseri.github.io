@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import Home from './components/Home';
 import About from './components/About';
-import Projects from './components/Projects';
 import Contact from './components/Contact';
 import JSONFormatter from './components/tools/JSONFormatter';
 import StringifyJSON from './components/tools/StringifyJSON';
 import DestringifyJSON from './components/tools/DestringifyJSON';
+import DDoSSimulator from './components/tools/DDoSSimulator';
 import { HomeIcon, UserIcon, BriefcaseIcon, CogIcon, MailIcon } from './constants';
 
 export interface NavItemConfig {
@@ -20,7 +20,6 @@ export interface NavItemConfig {
 const NAV_CONFIG: NavItemConfig[] = [
   { id: 'home', label: 'Home', icon: HomeIcon, component: Home },
   { id: 'about', label: 'About Me', icon: UserIcon, component: About },
-  { id: 'projects', label: 'Projects', icon: BriefcaseIcon, component: Projects },
   {
     id: 'tools',
     label: 'Tools',
@@ -29,6 +28,7 @@ const NAV_CONFIG: NavItemConfig[] = [
       { id: 'json-formatter', label: 'JSON Formatter', component: JSONFormatter },
       { id: 'stringify-json', label: 'Stringify JSON', component: StringifyJSON },
       { id: 'destringify-json', label: 'De-stringify JSON', component: DestringifyJSON },
+      { id: 'ddos-simulator', label: 'DDoS Simulator', component: DDoSSimulator },
     ],
   },
   { id: 'contact', label: 'Contact', icon: MailIcon, component: Contact },
