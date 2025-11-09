@@ -27,18 +27,8 @@ const Home: React.FC<HomeProps> = ({ setActiveView }) => {
         </div>
 
         <p className="max-w-3xl text-lg text-slate-500 dark:text-slate-400 mb-8">
-          Just an average human, wandering through uncertainty in silence. I listen more than I speak, but in every quiet moment, I find something worth understanding.
+          Just an average human, wandering through uncertainty in silence.
         </p>
-        <a
-          href="#contact"
-          className="bg-sky-500 text-white font-bold py-3 px-8 rounded-full hover:bg-sky-600 transition-transform transform hover:scale-105 shadow-lg"
-          onClick={(e) => {
-            e.preventDefault();
-            setActiveView({ main: 'contact' });
-          }}
-        >
-          Contact Me
-        </a>
     </section>
   );
 };

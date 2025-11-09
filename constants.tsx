@@ -67,7 +67,7 @@ export const PinOffIcon: React.FC<{ className?: string }> = ({ className = 'h-5 
 
 // DATA
 export const SOCIAL_LINKS = {
-  github: 'https://github.com/puthusseri',
+  github: 'https://github.com/vyshakputhusseri',
   linkedin: 'https://www.linkedin.com/in/vyshakputhusseri/',
 };
 
