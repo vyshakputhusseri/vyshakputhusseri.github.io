@@ -1,54 +1,321 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vyshak Puthusseri</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        darkMode: 'class',
-        theme: {
-          extend: {},
-        },
-      }
-    </script>
-    <style>
-      /* Simple scrollbar styling for a more modern look */
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #f1f5f9; /* slate-100 */
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #38bdf8; /* sky-400 */
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #0ea5e9; /* sky-500 */
-      }
+<html lang="en" class="scroll-smooth">
 
-      html.dark ::-webkit-scrollbar-track {
-        background: #1e293b; /* slate-800 */
-      }
-    </style>
-<!-- <script type="importmap">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vyshak Puthusseri</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/opendyslexic@1.0.3/opendyslexic.css">
+  <style>
+    :root {
+      --text-scale: 1;
+      --line-height: 1.5;
+      --letter-spacing: normal;
+      --word-spacing: normal;
+      --mask-y: 0px;
+      --mask-height: 150px;
+      --mask-opacity: 0.5;
+      --zoom-level: 1;
+      --cursor-x: 0px;
+      --cursor-y: 0px;
+
+      /* Theming Base (Default Light) */
+      --primary: #2563eb;
+      --secondary: #6366f1;
+      --primary-light: rgba(37, 99, 235, 0.08);
+      --bg-main: #ffffff;
+      --bg-panel: #f8fafc;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border-main: #e2e8f0;
+    }
+
+    /* Dark Mode Overrides */
+    .dark {
+      --bg-main: #020617;
+      --bg-panel: #0f172a;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-main: #1e293b;
+    }
+
+    /* Dual-Color Accent Themes */
+    .theme-blue {
+      --primary: #2563eb;
+      --secondary: #6366f1;
+      --primary-light: rgba(37, 99, 235, 0.1);
+    }
+
+    .theme-red {
+      --primary: #ef4444;
+      --secondary: #dc2626;
+      --primary-light: rgba(239, 68, 68, 0.1);
+    }
+
+    .theme-green {
+      --primary: #22c55e;
+      --secondary: #16a34a;
+      --primary-light: rgba(34, 197, 94, 0.1);
+    }
+
+    .theme-yellow {
+      --primary: #eab308;
+      --secondary: #ca8a04;
+      --primary-light: rgba(234, 179, 8, 0.1);
+    }
+
+    .theme-orange {
+      --primary: #f97316;
+      --secondary: #ea580c;
+      --primary-light: rgba(249, 115, 22, 0.1);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      margin: 0;
+      overflow: hidden;
+      font-size: calc(16px * var(--text-scale));
+      line-height: var(--line-height);
+      letter-spacing: var(--letter-spacing);
+      word-spacing: var(--word-spacing);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    #app-root {
+      zoom: var(--zoom-level);
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      background-color: var(--bg-main);
+    }
+
+    /* Utility classes for dynamic theming */
+    .text-primary {
+      color: var(--primary);
+    }
+
+    .bg-primary {
+      background-color: var(--primary);
+    }
+
+    .border-primary {
+      border-color: var(--primary);
+    }
+
+    .text-secondary {
+      color: var(--secondary);
+    }
+
+    .bg-secondary {
+      background-color: var(--secondary);
+    }
+
+    .bg-primary-light {
+      background-color: var(--primary-light);
+    }
+
+    /* Reading Support Overlays */
+    .reading-mask {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9998;
+      background: rgba(0, 0, 0, var(--mask-opacity));
+      mask-image: linear-gradient(to bottom, black 0%, black calc(var(--mask-y) - (var(--mask-height) / 2)), transparent calc(var(--mask-y) - (var(--mask-height) / 2)), transparent calc(var(--mask-y) + (var(--mask-height) / 2)), black calc(var(--mask-y) + (var(--mask-height) / 2)), black 100%);
+      -webkit-mask-image: linear-gradient(to bottom, black 0%, black calc(var(--mask-y) - (var(--mask-height) / 2)), transparent calc(var(--mask-y) - (var(--mask-height) / 2)), transparent calc(var(--mask-y) + (var(--mask-height) / 2)), black calc(var(--mask-y) + (var(--mask-height) / 2)), black 100%);
+    }
+
+    .reading-ruler {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: var(--mask-y);
+      height: 4px;
+      background: var(--primary);
+      z-index: 9999;
+      pointer-events: none;
+      box-shadow: 0 0 15px var(--primary);
+    }
+
+    .use-custom-cursor .custom-cursor {
+      display: block;
+      position: fixed;
+      left: var(--cursor-x);
+      top: var(--cursor-y);
+      width: 44px;
+      height: 44px;
+      border: 4px solid var(--primary);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10001;
+      transform: translate(-50%, -50%);
+      background: var(--primary-light);
+    }
+
+    .use-custom-cursor * {
+      cursor: none !important;
+    }
+
+    .high-contrast {
+      background-color: #000 !important;
+      color: #fff !important;
+    }
+
+    .high-contrast * {
+      color: #fff !important;
+      border-color: #fff !important;
+      background-color: transparent !important;
+    }
+
+    .high-contrast button {
+      border: 2px solid #fff !important;
+      border-radius: 6px;
+    }
+
+    .high-contrast [aria-pressed="true"],
+    .high-contrast [aria-checked="true"] {
+      background-color: #fff !important;
+    }
+
+    .high-contrast [aria-pressed="true"]>div,
+    .high-contrast [aria-checked="true"]>div {
+      background-color: #000 !important;
+    }
+
+    .monochrome {
+      filter: grayscale(100%) contrast(1.1);
+    }
+
+    .underline-links a,
+    .underline-links button:not([role="switch"]):not(.no-underline) {
+      text-decoration: underline !important;
+    }
+
+    .focus-ring *:focus-visible {
+      outline: 6px solid var(--primary) !important;
+      outline-offset: 4px !important;
+    }
+
+    .dyslexic-font,
+    .dyslexic-font * {
+      font-family: 'OpenDyslexic', cursive !important;
+    }
+
+    .reduce-motion * {
+      animation: none !important;
+      transition: none !important;
+    }
+
+    /* Color Blindness Filters */
+    .protanopia {
+      filter: url('#protanopia-filter');
+    }
+
+    .deuteranopia {
+      filter: url('#deuteranopia-filter');
+    }
+
+    .tritanopia {
+      filter: url('#tritanopia-filter');
+    }
+
+    /* Sidebar Custom Styles */
+    .sidebar-active-bg {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .sidebar-text {
+      color: var(--text-muted);
+    }
+
+    .sidebar-text:hover {
+      color: var(--primary);
+    }
+
+    .sidebar-border {
+      border-color: var(--border-main);
+    }
+
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 0;
+      background: var(--primary);
+      color: white;
+      padding: 12px 24px;
+      z-index: 10000;
+      font-weight: 800;
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
+    /* Custom Range Input */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: transparent;
+      height: 4px;
+    }
+
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 4px;
+      background: var(--border-main);
+      border-radius: 2px;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: 4px solid var(--bg-main);
+      cursor: pointer;
+      margin-top: -8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+  <script type="importmap">
 {
   "imports": {
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "vite": "https://aistudiocdn.com/vite@^7.1.10",
-    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.0.4"
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.37.0",
+    "recharts": "https://esm.sh/recharts@^3.6.0"
   }
 }
-</script> -->
-<link rel="stylesheet" href="/index.css">
+</script>
+  <link rel="stylesheet" href="/index.css">
 </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
-  </body>
+
+<body>
+  <div id="root"></div>
+  <svg style="display: none">
+    <defs>
+      <filter id="protanopia-filter">
+        <feColorMatrix type="matrix"
+          values="0.567, 0.433, 0, 0, 0, 0.558, 0.442, 0, 0, 0, 0, 0.242, 0.758, 0, 0, 0, 0, 0, 1, 0" />
+      </filter>
+      <filter id="deuteranopia-filter">
+        <feColorMatrix type="matrix"
+          values="0.625, 0.375, 0, 0, 0, 0.7, 0.3, 0, 0, 0, 0, 0.3, 0.7, 0, 0, 0, 0, 0, 1, 0" />
+      </filter>
+      <filter id="tritanopia-filter">
+        <feColorMatrix type="matrix"
+          values="0.95, 0.05, 0, 0, 0, 0, 0.433, 0.567, 0, 0, 0, 0.475, 0.525, 0, 0, 0, 0, 0, 1, 0" />
+      </filter>
+    </defs>
+  </svg>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
 </html>

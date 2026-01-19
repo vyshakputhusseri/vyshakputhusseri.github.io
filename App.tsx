@@ -1,150 +1,164 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useEffect, useRef } from 'react';
+import { fetchGitHubProfile, fetchGitHubRepos } from './services/githubService';
+import { speakContent } from './services/geminiService';
+import { GitHubProfile, GitHubRepo } from './types';
 import Sidebar from './components/Sidebar';
-import Home from './components/Home';
-import About from './components/About';
+import Hero from './components/Hero';
+import Tools from './components/Tools';
+import Accessibility, { AccessibilitySettings, DEFAULT_SETTINGS } from './components/Accessibility';
+import CVViewer from './components/CVViewer';
+import AboutMe from './components/AboutMe';
 import Contact from './components/Contact';
-import JSONFormatter from './components/tools/JSONFormatter';
-import StringifyJSON from './components/tools/StringifyJSON';
-import DestringifyJSON from './components/tools/DestringifyJSON';
-import DDoSSimulator from './components/tools/DDoSSimulator';
-import { HomeIcon, UserIcon, BriefcaseIcon, CogIcon, MailIcon } from './constants';
+import Projects from './components/Projects';
 
-export interface NavItemConfig {
-  id: string;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  component?: React.ComponentType<any>;
-  subItems?: Omit<NavItemConfig, 'icon' | 'subItems'>[];
-}
+const App: React.FC = () => {
+  const [activeSection, setActiveSection] = useState('home');
+  const [activeTool, setActiveTool] = useState<'JSON Formatter' | 'Stringify JSON' | 'De-stringify JSON' | 'DDoS Simulator'>('JSON Formatter');
+  const [profile, setProfile] = useState<GitHubProfile | null>(null);
+  const [repos, setRepos] = useState<GitHubRepo[]>([]);
+  const [loading, setLoading] = useState(true);
+  const mainRef = useRef<HTMLElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
-const NAV_CONFIG: NavItemConfig[] = [
-  { id: 'home', label: 'Home', icon: HomeIcon, component: Home },
-  { id: 'about', label: 'About Me', icon: UserIcon, component: About },
-  {
-    id: 'tools',
-    label: 'Tools',
-    icon: CogIcon,
-    subItems: [
-      { id: 'json-formatter', label: 'JSON Formatter', component: JSONFormatter },
-      { id: 'stringify-json', label: 'Stringify JSON', component: StringifyJSON },
-      { id: 'destringify-json', label: 'De-stringify JSON', component: DestringifyJSON },
-      { id: 'ddos-simulator', label: 'DDoS Simulator', component: DDoSSimulator },
-    ],
-  },
-  { id: 'contact', label: 'Contact', icon: MailIcon, component: Contact },
-];
-
-function App() {
-  const [activeView, setActiveView] = useState<{ main: string; sub?: string }>({ main: 'home' });
-  const [displayedView, setDisplayedView] = useState(activeView);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isSidebarPinned, setIsSidebarPinned] = useState(() => {
-    return localStorage.getItem('sidebarPinned') === 'true';
+  // Load initial settings from localStorage or fallback to defaults
+  const [a11y, setA11y] = useState<AccessibilitySettings>(() => {
+    const saved = localStorage.getItem('a11y-settings');
+    return saved ? { ...DEFAULT_SETTINGS, ...JSON.parse(saved) } : DEFAULT_SETTINGS;
   });
-  const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
 
-  // --- HASH ROUTING ---
+  // Persist settings changes
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.slice(2); // remove #/
-      if (!hash) {
-        setActiveView({ main: 'home' });
-        return;
-      }
-      const [main, sub] = hash.split('/');
-      const mainNavItem = NAV_CONFIG.find(item => item.id === main);
+    localStorage.setItem('a11y-settings', JSON.stringify(a11y));
+  }, [a11y]);
 
-      if (mainNavItem) {
-        if (sub) {
-            const subItemExists = mainNavItem.subItems?.some(item => item.id === sub);
-            setActiveView({ main, sub: subItemExists ? sub : mainNavItem.subItems?.[0].id });
-        } else {
-            setActiveView({ main });
-        }
-      } else {
-        setActiveView({ main: 'home' });
-      }
-    };
 
-    handleHashChange();
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+  const loadData = async (user: string) => {
+    setLoading(true);
+    try {
+      const profileData = await fetchGitHubProfile(user);
+      const repoData = await fetchGitHubRepos(user);
+      setProfile(profileData);
+      setRepos(repoData);
+    } catch (err: any) {
+      setProfile({
+        login: user,
+        name: "Vyshak Puthusseri",
+        avatar_url: `https://github.com/${user}.png`,
+        bio: "An average human, who loves solving uncertainty",
+        public_repos: 12,
+        followers: 42,
+        following: 10,
+        html_url: `https://github.com/${user}`,
+        location: "India",
+        blog: ""
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData('vyshakputhusseri');
   }, []);
 
   useEffect(() => {
-    const { main, sub } = activeView;
-    let newHash = `/${main}`;
-    if (sub) {
-      newHash += `/${sub}`;
-    }
-    if (window.location.hash !== `#${newHash}`) {
-      window.location.hash = newHash;
-    }
-  }, [activeView]);
+    const root = document.documentElement;
 
-  // --- TRANSITION EFFECT ---
-  useEffect(() => {
-    const isSameView = activeView.main === displayedView.main && activeView.sub === displayedView.sub;
-    if (!isSameView) {
-      setIsTransitioning(true);
-      const timer = setTimeout(() => {
-        setDisplayedView(activeView);
-        setIsTransitioning(false);
-      }, 200); // Animation duration
+    // Apply CSS variables
+    root.style.setProperty('--text-scale', a11y.textScale.toString());
+    root.style.setProperty('--line-height', a11y.lineHeight.toString());
+    root.style.setProperty('--letter-spacing', `${a11y.letterSpacing}px`);
+    root.style.setProperty('--word-spacing', `${a11y.wordSpacing}px`);
+    root.style.setProperty('--mask-height', `${a11y.maskHeight}px`);
+    root.style.setProperty('--mask-opacity', a11y.maskOpacity.toString());
+    root.style.setProperty('--zoom-level', a11y.zoomLevel.toString());
 
-      return () => clearTimeout(timer);
-    }
-  }, [activeView, displayedView]);
+    // Resolve Theme Mode
+    const resolveMode = () => {
+      if (a11y.themeMode === 'auto') {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      return a11y.themeMode;
+    };
 
-  // --- SIDEBAR STATE ---
-  useEffect(() => {
-    localStorage.setItem('sidebarPinned', String(isSidebarPinned));
-  }, [isSidebarPinned]);
+    const mode = resolveMode();
+    const classList = [
+      mode === 'dark' ? 'dark' : '',
+      `theme-${a11y.accentTheme}`,
+      a11y.contrast === 'high' ? 'high-contrast' : '',
+      a11y.contrast === 'monochrome' ? 'monochrome' : '',
+      a11y.dyslexicFont ? 'dyslexic-font' : '',
+      a11y.focusRing ? 'focus-ring' : '',
+      a11y.largeTargets ? 'large-targets' : '',
+      a11y.reduceMotion ? 'reduce-motion' : '',
+      a11y.underlineLinks ? 'underline-links' : '',
+      a11y.customCursor ? 'use-custom-cursor' : '',
+      a11y.colorBlindMode !== 'none' ? a11y.colorBlindMode : '',
+    ].filter(Boolean);
 
-  const toggleSidebarPin = () => {
-    setIsSidebarPinned(prev => !prev);
+    root.className = classList.join(' ');
+
+    const handleMouseMove = (e: MouseEvent) => {
+      root.style.setProperty('--mask-y', `${e.clientY}px`);
+      root.style.setProperty('--cursor-x', `${e.clientX}px`);
+      root.style.setProperty('--cursor-y', `${e.clientY}px`);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [a11y]);
+
+  const handleReadPage = async () => {
+    if (!mainRef.current) return;
+    const contentText = mainRef.current.innerText.substring(0, 3000);
+    await speakContent(contentText);
   };
 
-  const renderContent = () => {
-    const viewToRender = displayedView;
-    const mainNavItem = NAV_CONFIG.find(item => item.id === viewToRender.main);
-    const DefaultComponent = Home;
-
-    if (!mainNavItem) return <DefaultComponent setActiveView={setActiveView} />;
-
-    if (mainNavItem.subItems && viewToRender.sub) {
-      const subItem = mainNavItem.subItems.find(item => item.id === viewToRender.sub);
-      const SubComponent = subItem?.component || mainNavItem.subItems[0]?.component;
-      return SubComponent ? <SubComponent /> : <div>Select a tool</div>;
-    }
-    
-    const MainComponent = mainNavItem.component;
-    if (MainComponent) {
-      return <MainComponent setActiveView={setActiveView} />;
-    }
-    
-    return <DefaultComponent setActiveView={setActiveView} />;
-  };
+  if (loading && !profile) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center space-y-4 bg-white">
+        <div className="w-12 h-12 border-4 border-gray-100 border-t-blue-600 rounded-full animate-spin"></div>
+        <p className="text-gray-400 font-black text-[10px] uppercase tracking-[0.3em]">Authenticating Portfolio...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 min-h-screen font-sans">
-      <div className="flex min-h-screen">
+    <div className="flex min-h-screen relative overflow-hidden transition-colors duration-300">
+      <div id="app-root" className="flex w-full min-h-screen">
+        <a href="#main-content" className="skip-link">Skip to main content</a>
+        {a11y.readingMask && <div className="reading-mask" />}
+        {a11y.readingRuler && <div className="reading-ruler" />}
+        <div className="custom-cursor" />
+
         <Sidebar
-          navConfig={NAV_CONFIG}
-          activeView={activeView}
-          setActiveView={setActiveView}
-          isPinned={isSidebarPinned}
-          togglePin={toggleSidebarPin}
-          onExpansionChange={setIsSidebarExpanded}
+          activeSection={activeSection}
+          setActiveSection={setActiveSection}
+          activeTool={activeTool}
+          setActiveTool={(tool) => { setActiveTool(tool); setActiveSection('tools'); }}
         />
-        <main className={`flex-1 transition-all duration-300 ${isSidebarExpanded ? 'pl-56' : 'pl-20'}`}>
-          <div className={`h-full w-full transition-all duration-200 ease-in-out ${isTransitioning ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
-            {renderContent()}
-          </div>
-        </main>
+
+        <div id="main-scroll-area" ref={scrollAreaRef} className="flex-1 ml-64 min-h-screen overflow-y-auto">
+          <main id="main-content" ref={mainRef} className="max-w-5xl mx-auto px-8">
+            {activeSection === 'home' && profile && <Hero profile={profile} />}
+            {activeSection === 'about' && <AboutMe />}
+            {activeSection === 'projects' && <Projects repos={repos} />}
+            {activeSection === 'tools' && <div className="py-16"><Tools activeTool={activeTool} /></div>}
+            {activeSection === 'resume' && <CVViewer />}
+            {activeSection === 'accessibility' && <div className="py-16"><Accessibility settings={a11y} updateSettings={(s) => setA11y(prev => ({ ...prev, ...s }))} /></div>}
+            {activeSection === 'contact' && <Contact />}
+          </main>
+          {a11y.ttsEnabled && (
+            <button onClick={handleReadPage} className="fixed bottom-28 left-72 px-8 py-4 bg-white border border-blue-100 text-blue-600 rounded-2xl shadow-2xl font-black text-[10px] uppercase tracking-widest flex items-center gap-4 z-50 transition-all hover:scale-105 active:scale-95">
+              <span className="w-2.5 h-2.5 bg-blue-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.5)]"></span>
+              Speak Page Content
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
-}
+};
 
 export default App;
