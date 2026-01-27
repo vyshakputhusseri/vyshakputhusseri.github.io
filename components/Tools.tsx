@@ -1,7 +1,10 @@
-
 import React, { useState } from 'react';
+import JsonFormatter from './tools/JsonFormatter';
+import StringifyJson from './tools/StringifyJson';
+import DestringifyJson from './tools/DestringifyJson';
+import OAuthTool from './tools/OAuthTool';
 
-type ToolType = 'JSON Formatter' | 'Stringify JSON' | 'De-stringify JSON' | 'DDoS Simulator';
+type ToolType = 'JSON Formatter' | 'Stringify JSON' | 'De-stringify JSON' | 'DDoS Simulator' | 'Zoho OAuth';
 
 interface ToolPanelProps {
   activeTool: ToolType;
@@ -11,38 +14,15 @@ const Tools: React.FC<ToolPanelProps> = ({ activeTool }) => {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
-
-  const handleJsonFormat = () => {
-    try {
-      const parsed = JSON.parse(input);
-      setOutput(JSON.stringify(parsed, null, 2));
-      setError('');
-    } catch (e) {
-      setError('Invalid JSON input');
-    }
-  };
-
-  const handleStringify = () => {
-    try {
-      const parsed = JSON.parse(input);
-      setOutput(JSON.stringify(JSON.stringify(parsed)));
-      setError('');
-    } catch (e) {
-      setError('Invalid JSON input');
-    }
-  };
-
-  const handleDestringify = () => {
-    try {
-      // Remove surrounding quotes if present and unescape
-      const unquoted = input.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"');
-      const parsed = JSON.parse(unquoted);
-      setOutput(JSON.stringify(parsed, null, 2));
-      setError('');
-    } catch (e) {
-      setError('Invalid Stringified JSON');
-    }
-  };
+  // Zoho OAuth states
+  const [serverType, setServerType] = useState<'production'|'local'|'development'>('production');
+  const [clientID, setClientID] = useState('');
+  const [scope, setScope] = useState('AaaServer.profile.READ');
+  const [redirectURL, setRedirectURL] = useState('');
+  const [accessCode, setAccessCode] = useState('');
+  const [scopeHistory, setScopeHistory] = useState<string[]>([]);
+  const intervalRef = React.useRef<number | null>(null);
+  const timeoutRef = React.useRef<number | null>(null);
 
   const renderSimulator = () => (
     <div className="space-y-6">
@@ -75,6 +55,147 @@ const Tools: React.FC<ToolPanelProps> = ({ activeTool }) => {
     </div>
   );
 
+  const initializeOAuthState = () => {
+    try {
+      const sc = localStorage.getItem('scopeHistory');
+      if (sc) {
+        const arr = sc.split(';').filter(Boolean);
+        setScopeHistory(arr);
+      }
+      const prod = localStorage.getItem('productionClientID');
+      const local = localStorage.getItem('localClientID');
+      const dev = localStorage.getItem('developmentClientID');
+      const lastScope = localStorage.getItem('lastUsedScope');
+      const redirect = localStorage.getItem('redirectURL');
+      const storedAccess = localStorage.getItem('access_code');
+      if (prod) setClientID(prod);
+      else if (local) setClientID(local);
+      else if (dev) setClientID(dev);
+      if (lastScope) setScope(lastScope);
+      if (redirect) setRedirectURL(redirect);
+      if (storedAccess) setAccessCode(storedAccess);
+    } catch (e) {
+      // ignore
+    }
+  };
+
+  React.useEffect(() => {
+    initializeOAuthState();
+    return () => {
+      if (intervalRef.current) window.clearInterval(intervalRef.current);
+      if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const copyToClipboard = async (str: string) => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      try { await navigator.clipboard.writeText(str); return true; } catch (e) { }
+    }
+    const el = document.createElement('textarea');
+    el.value = str;
+    el.setAttribute('readonly', '');
+    el.style.position = 'absolute';
+    el.style.left = '-9999px';
+    document.body.appendChild(el);
+    el.select();
+    try { document.execCommand('copy'); } catch (e) { }
+    document.body.removeChild(el);
+    return true;
+  };
+
+  const clearHistory = () => {
+    localStorage.clear();
+    setScopeHistory([]);
+    setClientID('');
+    setScope('');
+    setRedirectURL('');
+    setAccessCode('');
+  };
+
+  const changeClientIDBasedOnServer = (stype: typeof serverType) => {
+    setServerType(stype);
+    if (stype === 'production') {
+      const v = localStorage.getItem('productionClientID');
+      if (v) setClientID(v);
+      else setClientID('');
+    } else if (stype === 'local') {
+      const v = localStorage.getItem('localClientID');
+      if (v) setClientID(v);
+      else setClientID('');
+    } else {
+      const v = localStorage.getItem('developmentClientID');
+      if (v) setClientID(v);
+      else setClientID('');
+    }
+  };
+
+  const generateAuthenticationCode = () => {
+    let sc = scope.trim();
+    if (sc.endsWith(',')) sc = sc.slice(0, -1);
+    if (sc.indexOf(' ') !== -1) { setError('Remove the spaces in scope'); return; }
+    if (!clientID || !redirectURL) { setError('Provide client ID and redirect URL'); return; }
+    // persist
+    localStorage.setItem('redirectURL', redirectURL);
+    localStorage.setItem('lastUsedScope', sc);
+    if (!scopeHistory.includes(sc)) {
+      const next = [...scopeHistory, sc];
+      setScopeHistory(next);
+      localStorage.setItem('scopeHistory', next.join(';') + ';');
+    }
+
+    if (serverType === 'production') {
+      localStorage.setItem('productionClientID', clientID);
+    } else if (serverType === 'local') {
+      localStorage.setItem('localClientID', clientID);
+    } else {
+      localStorage.setItem('developmentClientID', clientID);
+    }
+
+    let url = '';
+    if (serverType === 'production') url = `https://accounts.zoho.com/oauth/v2/auth?response_type=token&client_id=${encodeURIComponent(clientID)}&scope=${encodeURIComponent(sc)}&redirect_uri=${encodeURIComponent(redirectURL)}`;
+    else if (serverType === 'local') url = `https://accounts.localzoho.com/oauth/v2/auth?response_type=token&client_id=${encodeURIComponent(clientID)}&scope=${encodeURIComponent(sc)}&redirect_uri=${encodeURIComponent(redirectURL)}`;
+    else url = `https://accounts.csez.zohocorpin.com/oauth/v2/auth?response_type=token&client_id=${encodeURIComponent(clientID)}&scope=${encodeURIComponent(sc)}&redirect_uri=${encodeURIComponent(redirectURL)}`;
+
+    const authorizationWindow = window.open(url, '_blank');
+    if (!authorizationWindow) { setError('Popup blocked'); return; }
+
+    intervalRef.current = window.setInterval(() => {
+      try {
+        const hash_data = (authorizationWindow as Window).location.hash;
+        if (hash_data) {
+          if (intervalRef.current) window.clearInterval(intervalRef.current);
+          if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+          try { authorizationWindow.close(); } catch (e) {}
+          const match = hash_data.match('[#&]access_token=*[^&]*');
+          if (match && match[0]) {
+            const access_token = match[0].split('=')[1];
+            setAccessCode(access_token);
+            localStorage.setItem('access_code', access_token);
+            setError('');
+          } else {
+            setError('No access_token found in redirect');
+          }
+        }
+      } catch (e) {
+        // cross-origin until redirected back to allowed redirect URL
+      }
+    }, 1000);
+
+    timeoutRef.current = window.setTimeout(() => {
+      if (intervalRef.current) window.clearInterval(intervalRef.current);
+      try { authorizationWindow.close(); } catch (e) {}
+      setError('Authorization timed out');
+    }, 50000);
+  };
+
+  const loadScopeFromHistory = (s: string) => { setScope(s); };
+
+  const handleStringify = () => {
+    // Add your stringify logic here
+    console.log('Stringify button clicked');
+  };
+
   return (
     <div className="p-8 md:p-12 max-w-5xl mx-auto space-y-8 animate-fadeIn">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -82,47 +203,13 @@ const Tools: React.FC<ToolPanelProps> = ({ activeTool }) => {
           <h2 className="text-3xl font-bold text-gray-900">{activeTool}</h2>
           <p className="text-gray-500">Utility for security researchers and developers.</p>
         </div>
-        <div className="flex gap-2">
-          {activeTool !== 'DDoS Simulator' && (
-            <button 
-              onClick={() => {
-                if(activeTool === 'JSON Formatter') handleJsonFormat();
-                if(activeTool === 'Stringify JSON') handleStringify();
-                if(activeTool === 'De-stringify JSON') handleDestringify();
-              }}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-md shadow-blue-500/10"
-            >
-              Process
-            </button>
-          )}
-          <button 
-            onClick={() => { setInput(''); setOutput(''); setError(''); }}
-            className="px-6 py-2 bg-gray-100 text-gray-600 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
-          >
-            Clear
-          </button>
-        </div>
       </div>
 
-      {activeTool === 'DDoS Simulator' ? renderSimulator() : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-[500px]">
-          <div className="flex flex-col space-y-2">
-            <label className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Input</label>
-            <textarea
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Paste your data here..."
-              className="flex-1 bg-gray-50 border border-gray-200 rounded-2xl p-6 font-mono text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none resize-none transition-all shadow-inner"
-            />
-          </div>
-          <div className="flex flex-col space-y-2">
-            <label className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Output</label>
-            <div className={`flex-1 border rounded-2xl p-6 font-mono text-sm overflow-auto whitespace-pre transition-all shadow-sm ${error ? 'bg-red-50 border-red-200 text-red-600' : 'bg-white border-gray-200 text-gray-700'}`}>
-              {error || output || 'Processed results will appear here...'}
-            </div>
-          </div>
-        </div>
-      )}
+      {activeTool === 'JSON Formatter' && <JsonFormatter />}
+      {activeTool === 'Stringify JSON' && <StringifyJson />}
+      {activeTool === 'De-stringify JSON' && <DestringifyJson />}
+      {activeTool === 'DDoS Simulator' && renderSimulator()}
+      {activeTool === 'Zoho OAuth' && <OAuthTool />}
     </div>
   );
 };

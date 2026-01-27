@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchGitHubProfile, fetchGitHubRepos } from './services/githubService';
 import { speakContent } from './services/geminiService';
@@ -14,7 +13,7 @@ import Projects from './components/Projects';
 
 const App: React.FC = () => {
   const [activeSection, setActiveSection] = useState('home');
-  const [activeTool, setActiveTool] = useState<'JSON Formatter' | 'Stringify JSON' | 'De-stringify JSON' | 'DDoS Simulator'>('JSON Formatter');
+  const [activeTool, setActiveTool] = useState<'JSON Formatter' | 'Stringify JSON' | 'De-stringify JSON' | 'DDoS Simulator' | 'Zoho OAuth'>('Zoho OAuth');
   const [profile, setProfile] = useState<GitHubProfile | null>(null);
   const [repos, setRepos] = useState<GitHubRepo[]>([]);
   const [loading, setLoading] = useState(true);
