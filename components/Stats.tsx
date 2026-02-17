@@ -52,15 +52,15 @@ const Stats: React.FC<StatsProps> = ({ profile, insights }) => {
         <div className="h-72">
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
-              <PolarGrid stroke="#f1f5f9" />
-              <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 600 }} />
+                <PolarGrid stroke="var(--border-main)" />
+                <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--text-muted)', fontSize: 12, fontWeight: 600 }} />
               <Radar
-                name="Proficiency"
-                dataKey="A"
-                stroke="#0ea5e9"
-                strokeWidth={3}
-                fill="#0ea5e9"
-                fillOpacity={0.15}
+                  name="Proficiency"
+                  dataKey="A"
+                  stroke={'var(--primary)'}
+                  strokeWidth={3}
+                  fill={'var(--primary)'}
+                  fillOpacity={0.12}
               />
             </RadarChart>
           </ResponsiveContainer>

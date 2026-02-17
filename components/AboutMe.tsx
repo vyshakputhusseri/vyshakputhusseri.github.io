@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PeekView from './PeekView';
 
 interface TimelineItemProps {
@@ -63,53 +63,53 @@ const AboutMe: React.FC = () => {
                     </div>
 
                     <div className="space-y-12 border-l-2 border-[var(--border-main)] pl-8 ml-3 relative">
-                        <TimelineItem
-                            id="exp-1"
-                            title="Member Technical Staff"
-                            subtitle="Zoho"
-                            date="March 2021 – Ongoing"
-                            icon="💼"
-                            preview="Building robust backend systems and security protocols."
-                            onOpenPeek={() => openPeek(
-                                'exp-1',
-                                'Member Technical Staff',
-                                <div className="space-y-8">
-                                    <div className="space-y-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-12 h-12 rounded-xl bg-[var(--bg-secondary)] flex items-center justify-center text-2xl">💼</div>
-                                            <div>
-                                                <h3 className="text-xl font-bold text-[var(--text-main)]">Zoho Corporation</h3>
-                                                <p className="text-[var(--text-muted)]">Chennai, India</p>
+                            <TimelineItem
+                                id="exp-1"
+                                title="Member Technical Staff"
+                                subtitle="Zoho"
+                                date="March 2021 – Ongoing"
+                                icon="💼"
+                                preview="Building robust backend systems and security protocols."
+                                onOpenPeek={() => openPeek(
+                                    'exp-1',
+                                    'Member Technical Staff',
+                                    <div className="space-y-8">
+                                        <div className="space-y-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-12 h-12 rounded-xl bg-[var(--bg-secondary)] flex items-center justify-center text-2xl">💼</div>
+                                                <div>
+                                                    <h3 className="text-xl font-bold text-[var(--text-main)]">Zoho Corporation</h3>
+                                                    <p className="text-[var(--text-muted)]">Chennai, India</p>
+                                                </div>
+                                            </div>
+                                            <div className="inline-block px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-black uppercase rounded-full tracking-wider">
+                                                March 2021 – Present
                                             </div>
                                         </div>
-                                        <div className="inline-block px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-black uppercase rounded-full tracking-wider">
-                                            March 2021 – Present
+
+                                        <div className="space-y-4">
+                                            <h4 className="text-lg font-bold text-[var(--text-main)] border-b border-[var(--border-main)] pb-2">Overview</h4>
+                                            <p className="text-[var(--text-muted)] leading-relaxed text-lg">
+                                                With a focus on building robust backend systems, I have spent my career developing tools that handle data at scale. My work has spanned from creating analytics dashboards for API usage to creating security protocols and red team activities.
+                                            </p>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <h4 className="text-lg font-bold text-[var(--text-main)] border-b border-[var(--border-main)] pb-2">Key Competencies</h4>
+                                            <div className="flex flex-wrap gap-2">
+                                                <Badge>Python</Badge>
+                                                <Badge>Java</Badge>
+                                                <Badge>SQL</Badge>
+                                                <Badge>Kafka</Badge>
+                                                <Badge>Redis</Badge>
+                                                <Badge>Security Protocols</Badge>
+                                                <Badge>System Design</Badge>
+                                            </div>
                                         </div>
                                     </div>
-
-                                    <div className="space-y-4">
-                                        <h4 className="text-lg font-bold text-[var(--text-main)] border-b border-[var(--border-main)] pb-2">Overview</h4>
-                                        <p className="text-[var(--text-muted)] leading-relaxed text-lg">
-                                            With a focus on building robust backend systems, I have spent my career developing tools that handle data at scale. My work has spanned from creating analytics dashboards for API usage to creating security protocols and red team activities.
-                                        </p>
-                                    </div>
-
-                                    <div className="space-y-4">
-                                        <h4 className="text-lg font-bold text-[var(--text-main)] border-b border-[var(--border-main)] pb-2">Key Competencies</h4>
-                                        <div className="flex flex-wrap gap-2">
-                                            <Badge>Python</Badge>
-                                            <Badge>Java</Badge>
-                                            <Badge>SQL</Badge>
-                                            <Badge>Kafka</Badge>
-                                            <Badge>Redis</Badge>
-                                            <Badge>Security Protocols</Badge>
-                                            <Badge>System Design</Badge>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        />
-                    </div>
+                                )}
+                            />
+                        </div>
                 </div>
 
                 {/* Education Section */}
@@ -309,12 +309,20 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ id, title, subtitle, date, 
 
     return (
         <div className="relative group">
-            <div
-                className="absolute -left-[41px] top-1 w-5 h-5 rounded-full border-4 shadow-sm cursor-pointer z-10 bg-[var(--bg-main)] border-[var(--primary)] group-hover:scale-125 transition-transform duration-300"
+            <button
+                className="absolute -left-[41px] top-1 w-5 h-5 rounded-full border-4 shadow-sm z-10 bg-[var(--bg-main)] border-[var(--primary)] group-hover:scale-125 transition-transform duration-300"
                 onClick={() => onOpenPeek(id)}
+                aria-label={`Open details for ${title}`}
+                type="button"
             />
 
-            <div className="space-y-4 cursor-pointer transition-all hover:translate-x-2 duration-300" onClick={() => onOpenPeek(id)}>
+            <div
+                className="space-y-4 transition-all hover:translate-x-2 duration-300"
+                onClick={() => onOpenPeek(id)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpenPeek(id); } }}
+            >
                 <div>
                     <h4 className="text-xl font-bold text-[var(--text-main)] group-hover:text-[var(--primary)] transition-colors">{title}</h4>
                     <div className="text-[var(--text-main)] font-medium opacity-80">{subtitle}</div>
@@ -330,12 +338,18 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ id, title, subtitle, date, 
 
 const ExpandableCard: React.FC<ExpandableCardProps> = ({ title, subtitle, icon, children }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const contentId = `expand-${title.replace(/\s+/g, '-').toLowerCase()}`;
 
     return (
         <div className="bg-[var(--bg-panel)] rounded-2xl border border-gray-100/5 overflow-hidden transition-all duration-300 hover:border-[var(--primary)]/30 shadow-sm">
             <div
-                className="p-6 flex items-center justify-between cursor-pointer group"
+                className="p-6 flex items-center justify-between group"
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+                aria-controls={contentId}
                 onClick={() => setIsOpen(!isOpen)}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setIsOpen(!isOpen); } }}
             >
                 <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-xl bg-[var(--bg-secondary)] flex items-center justify-center text-xl shadow-inner text-[var(--text-main)] group-hover:text-[var(--primary)] transition-colors">
@@ -347,16 +361,18 @@ const ExpandableCard: React.FC<ExpandableCardProps> = ({ title, subtitle, icon, 
                     </div>
                 </div>
 
-                <button
+                <span
                     className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${isOpen ? 'bg-[var(--primary)] text-white rotate-180' : 'bg-[var(--bg-secondary)] text-[var(--text-muted)] group-hover:text-[var(--text-main)]'}`}
-                    aria-label={isOpen ? "Collapse" : "Expand"}
+                    aria-hidden="true"
                 >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" /></svg>
-                </button>
+                </span>
             </div>
 
             <div
+                id={contentId}
                 className={`overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'}`}
+                aria-hidden={!isOpen}
             >
                 <div className="p-6 pt-0 border-t border-[var(--border-main)]/50">
                     {children}

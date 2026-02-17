@@ -178,9 +178,12 @@ const Accessibility: React.FC<AccessibilityProps> = ({ settings, updateSettings 
         onClick={() => setShowInfoFor(showInfoFor === id ? null : id)}
         className="ml-2 w-6 h-6 rounded-full border border-[var(--border-main)] text-[11px] flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--primary)] hover:border-[var(--primary)] transition-colors bg-[var(--bg-panel)] font-bold shadow-sm"
         aria-label="Information"
+        aria-expanded={showInfoFor === id}
+        aria-controls={`${id}-info`}
+        type="button"
       >i</button>
       {showInfoFor === id && (
-        <div className="absolute z-[100] left-8 top-0 w-64 bg-[var(--bg-panel)] text-[var(--text-main)] p-4 rounded-2xl text-[11px] shadow-2xl animate-fadeIn border border-[var(--border-main)] pointer-events-none">
+        <div id={`${id}-info`} role="region" aria-live="polite" className="absolute z-[100] left-8 top-0 w-64 bg-[var(--bg-panel)] text-[var(--text-main)] p-4 rounded-2xl text-[11px] shadow-2xl animate-fadeIn border border-[var(--border-main)]">
           <div className="font-bold mb-1 uppercase tracking-widest text-[9px] text-[var(--primary)]">Information</div>
           {text}
           <div className="absolute top-2 -left-2 w-4 h-4 bg-[var(--bg-panel)] rotate-45 border-l border-b border-[var(--border-main)]"></div>
