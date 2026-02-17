@@ -6,25 +6,27 @@ const CVViewer: React.FC = () => {
 
     return (
         <div className="py-24 space-y-12 animate-fadeIn h-full flex flex-col">
-            <div className="flex justify-between items-center border-b border-gray-100 pb-10">
-                <h2 className="text-5xl font-black tracking-tighter">My Resume</h2>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-[var(--border-main)] pb-10">
+                <h2 className="text-5xl font-black tracking-tighter text-[var(--text-main)]">My Resume</h2>
                 <a
                     href={cvUrl}
                     download
-                    className="px-8 py-4 bg-gray-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
+                    className="px-8 py-4 bg-[var(--primary)] text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
+                    aria-label="Download resume as PDF"
                 >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
                     Download PDF
                 </a>
             </div>
 
-            <div className="w-full bg-white rounded-3xl shadow-sm border border-gray-100" style={{ height: '1200px' }}>
+            <div className="w-full bg-[var(--bg-panel)] rounded-3xl shadow-sm border border-[var(--border-main)]" style={{ height: '1200px' }}>
                 <iframe
                     src={googleDocsViewerUrl}
                     className="w-full h-full border-none rounded-3xl"
-                    title="CV Viewer"
+                    title="CV Viewer - Vyshak Puthusseri Resume"
+                    loading="lazy"
                 />
             </div>
         </div>

@@ -126,7 +126,7 @@ const AboutMe: React.FC = () => {
                             subtitle="College of Engineering Trivandrum (KTU)"
                             date="2017 - 2020"
                             icon="🏫"
-                            preview="Class Topper."
+                            // preview="Class Topper."
                             onOpenPeek={() => openPeek(
                                 'edu-1',
                                 'Master of Computer Application',
@@ -142,7 +142,7 @@ const AboutMe: React.FC = () => {
                                     <div className="bg-[var(--bg-secondary)] p-6 rounded-2xl border border-[var(--border-main)]">
                                         <div className="text-sm font-black uppercase text-[var(--text-muted)] tracking-widest mb-2">Performance</div>
                                         <div className="text-3xl font-black text-[var(--primary)] mb-1">8.77 <span className="text-lg text-[var(--text-muted)] font-bold">/ 10.0</span></div>
-                                        <div className="text-[var(--text-main)] font-medium">Class Topper</div>
+                                        {/* <div className="text-[var(--text-main)] font-medium">Class Topper</div> */}
                                     </div>
 
                                     {/* <p className="text-[var(--text-muted)] leading-relaxed">
@@ -158,7 +158,7 @@ const AboutMe: React.FC = () => {
                             subtitle="MG College (Kannur University)"
                             date="2014 - 2017"
                             icon="🎓"
-                            preview="Graduated with Distinction."
+                            // preview="Graduated with Distinction."
                             onOpenPeek={() => openPeek(
                                 'edu-2',
                                 'B.S. in Computer Science',
@@ -174,7 +174,7 @@ const AboutMe: React.FC = () => {
                                     <div className="bg-[var(--bg-secondary)] p-6 rounded-2xl border border-[var(--border-main)]">
                                         <div className="text-sm font-black uppercase text-[var(--text-muted)] tracking-widest mb-2">Score</div>
                                         <div className="text-3xl font-black text-[var(--primary)] mb-1">84.72%</div>
-                                        <div className="text-[var(--text-main)] font-medium">Distinction</div>
+                                        {/* <div className="text-[var(--text-main)] font-medium">Distinction</div> */}
                                     </div>
                                 </div>
                             )}
@@ -186,7 +186,7 @@ const AboutMe: React.FC = () => {
                             subtitle="Kerala HSE"
                             date="2012 - 2014"
                             icon="📚"
-                            preview="Academic Excellence."
+                            // preview="Academic Excellence."
                             onOpenPeek={() => openPeek(
                                 'edu-3',
                                 'Higher Secondary Education',

@@ -10,7 +10,6 @@
     "deploy": "npm run build && gh-pages -d dist -b main_compiled_page"
   },
   "dependencies": {
-    "@google/genai": "^1.37.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "recharts": "^3.6.0"

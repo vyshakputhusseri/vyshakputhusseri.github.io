@@ -30,11 +30,11 @@ const JsonFormatter: React.FC = () => {
         <div className="flex justify-between items-center">
           <label className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Output</label>
           <div className="flex gap-2">
-            <button onClick={handleJsonFormat} className="px-4 py-2 bg-[var(--primary)] text-white rounded-lg">Process</button>
-            <button onClick={() => { setInput(''); setOutput(''); setError(''); }} className="px-4 py-2 bg-gray-100 rounded-lg">Clear</button>
+            <button onClick={handleJsonFormat} className="px-4 py-2 bg-[var(--primary)] text-white rounded-lg font-semibold hover:brightness-110 transition-all">Process</button>
+            <button onClick={() => { setInput(''); setOutput(''); setError(''); }} className="px-4 py-2 bg-[var(--bg-panel)] border border-[var(--border-main)] text-[var(--text-main)] rounded-lg font-semibold hover:opacity-80 transition-all">Clear</button>
           </div>
         </div>
-        <div className={`flex-1 border rounded-2xl p-6 font-mono text-sm overflow-auto whitespace-pre transition-all shadow-sm ${error ? 'bg-red-50 border-red-200 text-red-600' : 'bg-white border-gray-200 text-gray-700'}`}>
+        <div className={`flex-1 border rounded-2xl p-6 font-mono text-sm overflow-auto whitespace-pre transition-all shadow-sm ${error ? 'bg-red-50 border-red-200 text-red-600' : 'bg-[var(--bg-panel)] border-[var(--border-main)] text-[var(--text-main)]'}`}>
           {error || output || 'Processed results will appear here...'}
         </div>
       </div>

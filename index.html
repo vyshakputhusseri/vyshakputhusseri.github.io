@@ -4,7 +4,46 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vyshak Puthusseri</title>
+  <title>Vyshak Puthusseri — Software Engineer & Security Researcher</title>
+  <meta name="description" content="Portfolio of Vyshak Puthusseri — Software Engineer at Zoho, Security Researcher, and AI enthusiast. Explore projects, tools, and more." />
+  <meta name="author" content="Vyshak Puthusseri" />
+  <meta name="keywords" content="Vyshak Puthusseri, Software Engineer, Security Researcher, Portfolio, Zoho, Python, Java, Developer" />
+  <link rel="canonical" href="https://vyshakputhusseri.github.io/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Vyshak Puthusseri — Software Engineer & Security Researcher" />
+  <meta property="og:description" content="Portfolio of Vyshak Puthusseri — Software Engineer at Zoho, Security Researcher, and AI enthusiast." />
+  <meta property="og:url" content="https://vyshakputhusseri.github.io/" />
+  <meta property="og:image" content="https://github.com/vyshakputhusseri.png" />
+  <meta property="og:site_name" content="Vyshak Puthusseri" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Vyshak Puthusseri — Software Engineer & Security Researcher" />
+  <meta name="twitter:description" content="Portfolio of Vyshak Puthusseri — Software Engineer at Zoho, Security Researcher, and AI enthusiast." />
+  <meta name="twitter:image" content="https://github.com/vyshakputhusseri.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="https://github.com/vyshakputhusseri.png" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Vyshak Puthusseri",
+    "url": "https://vyshakputhusseri.github.io",
+    "image": "https://github.com/vyshakputhusseri.png",
+    "jobTitle": "Member Technical Staff",
+    "worksFor": { "@type": "Organization", "name": "Zoho" },
+    "sameAs": [
+      "https://github.com/vyshakputhusseri",
+      "https://www.linkedin.com/in/vyshakputhusseri"
+    ]
+  }
+  </script>
+
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
@@ -281,6 +320,86 @@
       cursor: pointer;
       margin-top: -8px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* ====================== */
+    /*   CSS Animations        */
+    /* ====================== */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-24px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(24px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.92); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .animate-fadeIn { animation: fadeIn 0.5s ease-out both; }
+    .animate-slideUp { animation: slideUp 0.6s ease-out both; }
+    .animate-slideInLeft { animation: slideInLeft 0.5s ease-out both; }
+    .animate-slideInRight { animation: slideInRight 0.5s ease-out both; }
+    .animate-scaleIn { animation: scaleIn 0.4s ease-out both; }
+
+    .stagger-1 { animation-delay: 0.05s; }
+    .stagger-2 { animation-delay: 0.1s; }
+    .stagger-3 { animation-delay: 0.15s; }
+    .stagger-4 { animation-delay: 0.2s; }
+    .stagger-5 { animation-delay: 0.25s; }
+    .stagger-6 { animation-delay: 0.3s; }
+
+    /* Skeleton loading shimmer */
+    .skeleton {
+      background: linear-gradient(90deg, var(--bg-panel) 25%, var(--border-main) 50%, var(--bg-panel) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 0.75rem;
+    }
+
+    /* ====================== */
+    /*   Mobile Responsive     */
+    /* ====================== */
+    @media (max-width: 768px) {
+      .sidebar-desktop {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+      .sidebar-desktop.sidebar-open {
+        transform: translateX(0);
+      }
+      .mobile-overlay {
+        display: none;
+      }
+      .mobile-overlay.sidebar-open {
+        display: block;
+      }
+      #main-scroll-area {
+        margin-left: 0 !important;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .mobile-menu-btn {
+        display: none !important;
+      }
+      .mobile-overlay {
+        display: none !important;
+      }
     }
   </style>
   <script type="importmap">

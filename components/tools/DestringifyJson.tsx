@@ -31,7 +31,7 @@ const DestringifyJson: React.FC<DestringifyJsonProps> = () => {
       </div>
       <div className="flex flex-col space-y-2 mt-12">
         <label className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Output</label>
-        <div className={`flex-1 border rounded-2xl p-6 font-mono text-sm overflow-auto whitespace-pre transition-all shadow-sm ${error ? 'bg-red-50 border-red-200 text-red-600' : 'bg-white border-gray-200 text-gray-700'}`}>
+        <div className={`flex-1 border rounded-2xl p-6 font-mono text-sm overflow-auto whitespace-pre transition-all shadow-sm ${error ? 'bg-red-50 border-red-200 text-red-600' : 'bg-[var(--bg-panel)] border-[var(--border-main)] text-[var(--text-main)]'}`}>
           {error || output || 'Destringified JSON will appear here...'}
         </div>
       </div>
